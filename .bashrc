@@ -67,6 +67,10 @@ export HISTSIZE=10000
 
 export TMOUT=0
 
+# GO
+export GOPATH=$(go env GOPATH)
+export PATH=$PATH:$GOPATH:bin
+
 # 色リスト
 # 文字色
 #30	Black
