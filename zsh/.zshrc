@@ -1,72 +1,103 @@
-HISTFILE=~/.zsh_history
+# zsh setting
 
-HISTSIZE=1000000
-SAVEHIST=1000000
+case ${OSTYPE} in
+	darwin*)
+		#gitt-promptの読み込み
+		source ~/.zsh/git-prompt.sh
 
-PROMPT="%{${fg[red]}%}[%n@%m]%{${reset_color}%} %~
-%# "
-export LD_LIBRARY_PATH="/usr/local/bin"
+		# git-completionの読み込み
+		fpath=(~/.zsh $fpath)
+		zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
+		# 補完
+		autoload -Uz compinit && compinit
+	;;
+	linux*)
+	source ~/dotfiles/git-prompt.sh
+	#source ~/dotfiles/git-completion.bash
+	;;
+esac
 
-########################################
-# 基本機能
-# バインドキーをemacsにする
-bindkey -e
+
+# プロンプトのオプション表示設定(ONにすると重い可能性あり)
+#GIT_PS1_SHOWDIRTYSTATE=true
+
+# プロンプトの表示設定(好きなようにカスタマイズ可)
+#setopt PROMPT_SUBST ; PS1='%F{cyan}%n@%m%f: %F{green}%~%f %F{magenta}$(__git_ps1 "(%s)")%f
+#\$ '
+# %fに変更した場合はユーザー名のみになるので変な文字列が追加される場合はこちらに変更する
+setopt PROMPT_SUBST ; PS1='%F{cyan}%n: %F{green}%~%f %F{magenta}$(__git_ps1 "(%s)" )%f
+\$ '
+
+# GGtk-WARNING **: cannot open display
+unset SSH_ASKPASS
+
+# grep に色をつける
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# ls系コマンド
+# macとlinuxで挙動が違う
+case "${OSTYPE}" in
+darwin*)
+alias ls="ls -G"
+alias ll="ls -alF -lG"
+alias la="ls -A -laG"
+alias l="ls -CF -G"
+export LSCOLORS=exfxcxdxbxegedabagacad
+	;;
+linux*)
+alias ls='ls --color=auto'
+alias ll='ls -alF --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
+	;;
+*)
+alias ls='ls --color=auto'
+alias ll='ls -alF --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
+esac
+
+# dfにメモリ表示
+alias df='df -h'
+
+# Ctrl + S で固まるのを修正
+stty stop undef
+
+# vimとviを同じ動きにする
 alias vi='vim'
+# bind key emacs
+bindkey -e
 
-########################################
-# オプション
-# 日本語ファイル名を表示可能にする
-setopt print_eight_bit
+# VSCode
+# Ubuntuでやる場合これしないと表示がおかしくなる
+#alias code="code --disable-gpu"
 
-setopt correct
-autoload -Uz colors
-colors
-
-#source ~/git-completion.zsh
-zstyle ':completion:*:*:git:*' script ~/.git-completion.zsh
-
+# コマンド履歴ファイル
+HISTFILE=~/.zsh_history
+# 残すコマンド履歴数
+export SAVEHIST=1000
+export HISTSIZE=1000
+# 重複を記録しない
+setopt hist_ignore_dups
 # 同じコマンドをヒストリに残さない
 setopt hist_ignore_all_dups
-
 # 同時に起動したzshの間でヒストリを共有する
 setopt share_history
-
 # ヒストリに保存するときに余分なスペースを削除する
 setopt hist_reduce_blanks
 
-#r#######################################
-# 補完ui
-# 補完機能を有効にする
-autoload -Uz compinit
-compinit -u
+# 日本語ファイル名を表示可能にする
+setopt print_eight_bit
 
+export TMOUT=0
 
- #補完で小文字でも大文字にマッチさせる
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+# GO
+export GOPATH=$(go env GOPATH)
+export PATH=$PATH:$GOPATH:bin
 
-# ../ の後は今いるディレクトリを補完しない
-zstyle ':completion:*' ignore-parents parent pwd ..
-
-# sudo の後ろでコマンド名を補完する
-zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
-                   /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
-
-alias -g G='| grep'
-
-# zshを可愛くする
-# by http://qiita.com/kubosho_/items/c200680c26e509a4f41c
-# プロンプト指定
-PROMPT="
-[%n] %{${fg[yellow]}%}%~%{${reset_color}%}
-%(?.%{$fg[green]%}.%{$fg[blue]%})%(?!(*'-')ノ <!(*;-;%)? <)%{${reset_color}%} "
-# プロンプト指定(コマンドの続き)
-PROMPT2='[%n]> '
-# もしかして時のプロンプト指定
-SPROMPT="%{$fg[red]%}%{$suggest%}(*'~'%)? < もしかして %B%r%b %{$fg[red]%}かな? [そう!(y), 違う!(n),a,e]:${reset_color} "
-
-########################################
 # cool-peco
-########################################
 function peco_select_from_git_status(){
 	git status --porcelain | \
 	peco |
@@ -80,7 +111,7 @@ function peco_insert_selected_git_files(){
 	zle reset-prompt
 }
 
-source "$HOME/cool-peco/cool-peco"
+#source "$HOME/cool-peco/cool-peco"
 zle -N cool-peco-history
 bindkey '^r' cool-peco-history
 zle -N cool-peco-filename-search
@@ -100,17 +131,15 @@ bindkey '^h' cool-peco-ssh
 zle -N peco_select_from_git_status
 bindkey "^t" peco_select_from_git_status
 
-# Ctrl + Sで固まるのを防ぐ
 
-stty stop undef
 
-# SSH接続してgitのpushとかしようとしたら警告出るのを防ぐ
-unset SSH_ASKPASS
-
-alias -g V="awk '{print $1 }' | tr -d ':'"
-
-function grep-open-vim() {
-  echo -n "(* '-')? < "
-  read INPUT
-  vim `git grep ${INPUT} | peco | awk -F ':' '{ print $1 }'`
-}
+# 色リスト
+# 文字色
+#30	Black
+#31	Red
+#32	Green
+#33	Yellow
+#34	Blue
+#35	Magenta
+#36	Cyan
+#37	White
