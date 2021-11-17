@@ -98,38 +98,53 @@ export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$GOPATH:bin
 
 # cool-peco
-function peco_select_from_git_status(){
-	git status --porcelain | \
-	peco |
-	awk -F ' ' '{print $NF}' | \
-	tr 'n' ' '
+#function peco_select_from_git_status() {
+#	git status --porcelain | \
+#	peco |
+#	awk -F ' ' '{print $NF}' | \
+#	tr 'n' ' '
+#}
+
+function cool_peco_openfile_vim(){
+	local res
+	res="vi "
+	res+=$(find . -name "*${1}*" | grep -v "/\." | peco)
+	_cool-peco-insert-command-line $res
 }
 
-function peco_insert_selected_git_files(){
-	LBUFFER+=$(peco_select_from_git_status)
-	CURSOR= $#LBUFFER
-	zle reset-prompt
+function cool_peco_git_grep_vim(){
 }
 
-#source "$HOME/cool-peco/cool-peco"
+#function peco_insert_selected_git_files() {
+#	LBUFFER+=$(peco_select_from_git_status)
+#	CURSOR= $#LBUFFER
+#	zle reset-prompt
+#}
+
+
+source "$HOME/cool-peco/cool-peco"
 zle -N cool-peco-history
-bindkey '^r' cool-peco-history
+bindkey '^f' cool-peco-history
 zle -N cool-peco-filename-search
-bindkey '^g' cool-peco-filename-search
+bindkey '^n' cool-peco-filename-search
 zle -N cool-peco-git-log
 bindkey '^l' cool-peco-git-log
 zle -N cool-peco-git-checkout
 bindkey '^o' cool-peco-git-checkout
-zle -N cool-peco-openfile-vim
-bindkey '^v' cool-peco-openfile-vim
 zle -N cool-peco-ssh
 bindkey '^h' cool-peco-ssh
+zle -N cool_peco_openfile_vim
+bindkey '^v' cool_peco_openfile_vim
+zle -N cool_peco_git_grep_vim
+bindkey '^g' cool_peco_git_grep_vim
 
 #zle -N peco_insert_selected_git_files
-#bindkey "^a" peco_insert_selected_git_files
+#bindkey '^a' peco_insert_selected_git_files
 
-zle -N peco_select_from_git_status
-bindkey "^t" peco_select_from_git_status
+#zle -N peco_select_from_git_status
+#bindkey '^q' peco_select_from_git_status
+
+
 
 
 
@@ -143,3 +158,9 @@ bindkey "^t" peco_select_from_git_status
 #35	Magenta
 #36	Cyan
 #37	White
+
+# === cool-peco init ===
+FPATH="$FPATH:/Users/takuya.kawashita/cool-peco"
+autoload -Uz cool-peco
+cool-peco
+# ======================
