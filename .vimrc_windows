@@ -1,0 +1,118 @@
+
+" windows10 git bash の場合のmolokai
+" git clone https://github.com/tomasr/molokai
+" mv molokai/colors/molokai .vim ~/.vim/colors/
+
+if &compatible
+	set nocompatible
+endif
+set runtimepath+=~/.vim/dein.vim
+
+call dein#begin(expand('~/.vim/dein'))
+call dein#add('tomasr/molokai')
+call dein#add('scrooloose/nerdtree')
+call dein#end()
+
+if dein#check_install()
+	call dein#install()
+endif
+
+set noerrorbells visualbell t_vb=
+if has('autocmd')
+  autocmd GUIEnter * set visualbell t_vb=
+endif
+
+syntax enable
+colorscheme molokai
+set t_Co=256
+set title
+
+set nu
+set ruler
+set notitle
+set iminsert=0
+set shortmess+=I
+set laststatus=2
+set tabstop=4
+set cursorline
+set nomodeline
+set noswapfile
+set incsearch
+set ignorecase
+set hlsearch
+set autoread
+set smartcase
+set smartindent
+set wildmenu
+set t_kD=^?
+set iminsert=0
+set textwidth=0
+set formatoptions=q
+
+set clipboard+=unnamed,autoselect
+
+set backspace=indent,eol,start
+set textwidth=0
+set formatoptions=q
+
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+set guifont=Consolas:h12:cSHIFTJIS
+
+highlight CursorLine cterm=underline
+
+
+highlight CursorLine cterm=underline
+highlight Normal ctermbg=black ctermfg=grey
+
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+
+nnoremap J <C-D>
+nnoremap K <C-U>
+
+nnoremap H ^
+nnoremap L $
+
+nnoremap A I
+nnoremap F A
+
+nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sn gt
+nnoremap sb gT
+nnoremap st :<C-u>tabnew<CR>
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sq :<C-u>q<CR>
+nnoremap s> :<C-w>><CR>
+nnoremap s< :<C-w><<CR>
+
+inoremap jj <Esc>
+inoremap kk <Esc>
+
+nmap <Esc><Esc> :nohlsearch<CR><Esc>
+
+
+" NERDTreeのショートカット
+nnoremap <silent><C-e> :NERDTreeToggle<CR>
+nnoremap <silent><C-n>b :Bookmark<CR>
+nnoremap <silent><C-n>d :ClearBookmarks<CR>
+" NERDTreeのツリーを開く場所
+let g:NERDTreeWinPos="left" "right
+" NERDTreeの幅
+let g:NERDTreeWinSize="28"
+" NERDTree config
+let g:NERDTreeShowBookmarks=1
+" ignore
+let g:NERDTreeIgnore=['\.vim$','\.meta$']
+" 隠しファイルのON
+let g:NERDTreeShowHidden=1
+
+
