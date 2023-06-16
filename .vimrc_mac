@@ -5,7 +5,7 @@ if has('vim_starting')
 	if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
 		echo "install neobundle..."
 		" neobundleのクローン
-		:call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+		:call system("git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
 	endif
 	" molokaiをインストールしていない場合は自動インストールする
 	if !isdirectory(expand("~/.vim/colors/"))
