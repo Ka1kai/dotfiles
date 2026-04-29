@@ -3,7 +3,13 @@
 # default プロンプト設定
 #export PS1='\[\033[36m\][\h\[\033[32m\]:\w\n\$\[\033[00m\] '
 
-source ~/workspace/dotfiles/git-prompt.sh
+if [ -f ~/.git-completion.sh ]; then
+  source ~/.git-prompt.sh
+fi
+
+if [ -f ~/.git-prompt.sh ]; then
+  source ~/.git-completion.sh
+fi
 
 #GIT_PS1_SHOWDIRTYSTATE=true
 export PS1='\033[36m\]takuya.kawashita\[\033[32m\]:\w\[\033[35m\] $(__git_ps1 [%s])\[\033[00m\]'$'\n\$ '
